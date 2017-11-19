@@ -5,6 +5,12 @@ import fr.demo.domaine.ITransationDomaine;
 import fr.demo.dto.TransactionDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Implementation for {@link ITransationDomaine}.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class TransationDomaineImpl implements ITransationDomaine{
 	
 	private DataInstance accessData = DataInstance.getInstance();

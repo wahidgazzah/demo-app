@@ -8,6 +8,12 @@ import fr.demo.dto.AccountDTO;
 import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Implementation for {@link IAccountDomaine}.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class AccountDomaineImpl implements IAccountDomaine{
 	
 	private DataInstance accessData = DataInstance.getInstance();

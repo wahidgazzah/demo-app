@@ -1,5 +1,11 @@
 package fr.demo.exception;
 
+/**
+ * Exception messages
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public interface IExceptionMessage {
 	
 	public final static String NULL_DATA = "NULL_DATA";

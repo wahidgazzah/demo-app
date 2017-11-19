@@ -2,6 +2,12 @@ package fr.demo.dto.core;
 
 import java.util.Date;
 
+/**
+ * Base properties using on the DTO's.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class BaseDTO {
 	
 	private String reference;

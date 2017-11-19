@@ -7,6 +7,12 @@ import fr.demo.domaine.IUserDomaine;
 import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Implementation for {@link IUserDomaineF}.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class UserDomaineImpl implements IUserDomaine{
 	
 	private DataInstance acessData = DataInstance.getInstance();

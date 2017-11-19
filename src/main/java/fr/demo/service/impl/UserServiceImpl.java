@@ -8,6 +8,12 @@ import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 import fr.demo.service.IUserService;
 
+/**
+ * Service implementation for {@link IUserService}.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class UserServiceImpl implements IUserService{
 	
 	private IUserDomaine userDomaine = new UserDomaineImpl();

@@ -5,6 +5,12 @@ import java.util.List;
 
 import fr.demo.dto.core.BaseDTO;
 
+/**
+ * User DTO.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class UserDTO extends BaseDTO{
 
 	private String firstName;

@@ -4,6 +4,12 @@ import java.util.Date;
 
 import fr.demo.dto.core.BaseDTO;
 
+/**
+ * Transaction DTO.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class TransactionDTO extends BaseDTO{
 	
 	private String referenceUser;

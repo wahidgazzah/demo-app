@@ -5,6 +5,12 @@ import java.util.List;
 import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Service interface for users.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public interface IUserService {
 
 	public String create(UserDTO dto) throws CustomException;

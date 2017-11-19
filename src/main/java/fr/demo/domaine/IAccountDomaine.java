@@ -5,6 +5,12 @@ import java.util.List;
 import fr.demo.dto.AccountDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Domain interface for accounts.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public interface IAccountDomaine {
 
 	public String create(AccountDTO dto) throws CustomException;

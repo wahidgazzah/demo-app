@@ -14,6 +14,12 @@ import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 import fr.demo.exception.IExceptionMessage;
 
+/**
+ * Data Instance to store the data for the tests
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class DataInstance implements IDataInstance{
 	
 	private static Map<String, UserDTO> map = new HashMap<String, UserDTO>();

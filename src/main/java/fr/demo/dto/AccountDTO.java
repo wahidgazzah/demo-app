@@ -6,6 +6,12 @@ import java.util.List;
 
 import fr.demo.dto.core.BaseDTO;
 
+/**
+ * Account DTO.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class AccountDTO extends BaseDTO{
 	
 	private String referenceUser;

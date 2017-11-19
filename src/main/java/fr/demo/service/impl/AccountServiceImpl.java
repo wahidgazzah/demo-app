@@ -8,6 +8,12 @@ import fr.demo.dto.AccountDTO;
 import fr.demo.exception.CustomException;
 import fr.demo.service.IAccountService;
 
+/**
+ * Service implementation for {@link IAccountService}.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public class AccountServiceImpl implements IAccountService {
 
 	private IAccountDomaine accountDomaine = new AccountDomaineImpl();

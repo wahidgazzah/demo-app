@@ -7,6 +7,12 @@ import fr.demo.dto.TransactionDTO;
 import fr.demo.dto.UserDTO;
 import fr.demo.exception.CustomException;
 
+/**
+ * Data Instance interface.
+ * 
+ * @author wahid.gazzah
+ * @since 1.0.0
+ */
 public interface IDataInstance {
 
 	public String createUser(UserDTO dto) throws CustomException;
