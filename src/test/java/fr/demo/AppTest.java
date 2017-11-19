@@ -54,7 +54,6 @@ public class AppTest {
 				account.setReference("A0000" + i + j);
 				account.setReferenceUser(user.getReference());
 				account.setIban("FR00000000000000"+j);
-				//account.setAmount(INIT_ACCOUNT_AMOUNT);
 				account.setCreationDate(new Date());
 				
 				List<TransactionDTO> transactions = new ArrayList<TransactionDTO>();
@@ -106,7 +105,6 @@ public class AppTest {
 		AccountDTO account = new AccountDTO();
 		account.setReference("A000017");
 		account.setReferenceUser(user.getReference());
-		//account.setAmount(INIT_ACCOUNT_AMOUNT);
 		account.setIban("FR000000000000017");
 		account.setCreationDate(new Date());
 		
