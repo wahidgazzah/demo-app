@@ -1,16 +1,15 @@
 package fr.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
+import fr.demo.data.accessdata.DataInstance;
+import fr.demo.data.accessdata.IDataInstance;
 import fr.demo.dto.AccountDTO;
 import fr.demo.dto.TransactionDTO;
 import fr.demo.dto.UserDTO;
@@ -23,13 +22,13 @@ import fr.demo.service.impl.AccountServiceImpl;
 import fr.demo.service.impl.TransationServiceImpl;
 import fr.demo.service.impl.UserServiceImpl;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AppTest {
 
 	// init the services
 	private IUserService userService = new UserServiceImpl();
 	private IAccountService acountService = new AccountServiceImpl();
 	private ITransationService transactionService = new TransationServiceImpl();
+	private IDataInstance data = DataInstance.getInstance();
 	
 	// common data using during the tests
 	private final static String REF_USER = "U00002";
@@ -39,33 +38,40 @@ public class AppTest {
 	private final static String REF_TRANSACTION = "T00023";
 	private final static String NEW_FIRST_NAME = "DJO";
 	private final static Double INIT_TRANSACTION_AMOUNT = 10D;
+	
+	@Before
+	public void init() throws Exception {
 
+		// init data for each test function
+		// create 4 users client instance [U00001, U00002, U00003, U00004]
+		// each user have 2 accounts and each account we create an init transaction
+		data.initInstance();
+	}
+	
 	/**
 	 * Test create user
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_01_create_users_profiles() throws CustomException {
+	public void create_user_profile() throws CustomException {
 
-		// create 4 users client instance,
-		// each user have 2 accounts, each account one transaction
-
-		for (int i = 1; i < 5; i++) {
 			final UserDTO user = new UserDTO();
 			user.setAccounts(new ArrayList<AccountDTO>());
-			user.setReference("U0000" + i);
+			user.setReference("U000099");
 
+			// create 3 account for this user
 			for (int j = 1; j < 3; j++) {
 				final AccountDTO account = new AccountDTO();
-				account.setReference("A0000" + i + j);
+				account.setReference("A000099"+j);
 				account.setReferenceUser(user.getReference());
-				account.setIban("FR00000000000000" + j);
+				account.setIban("FR00000000000099" + j);
 				account.setCreationDate(new Date());
 
+				// create 1 transaction for each account
 				List<TransactionDTO> transactions = new ArrayList<TransactionDTO>();
 				TransactionDTO transaction = new TransactionDTO();
-				transaction.setReference("T0000" + i + j);
-				transaction.setReferenceUser("U0000" + i);
+				transaction.setReference("T0000" + j);
+				transaction.setReferenceUser("U000099");
 				transaction.setReferenceAccount("A0000" + j);
 				transaction.setAmount(INIT_TRANSACTION_AMOUNT);
 				transactions.add(transaction);
@@ -76,8 +82,7 @@ public class AppTest {
 
 			String refernceUsers = userService.create(user);
 			Assert.assertNotNull(refernceUsers);
-			assertThat(refernceUsers).isEqualTo("U0000" + i);
-		}
+			Assert.assertEquals(refernceUsers, "U000099");
 	}
 
 	/**
@@ -85,12 +90,12 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_02_read_users() throws CustomException {
-
+	public void read_users() throws CustomException {
+		
 		final List<UserDTO> users = userService.getAll();
 
 		Assert.assertNotNull(users);
-		assertThat(users.size()).isEqualTo(4);
+		Assert.assertEquals(users.size(), 4);
 	}
 
 	/**
@@ -98,8 +103,8 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_03_read_user() throws CustomException {
-
+	public void read_user() throws CustomException {
+		
 		final UserDTO user = userService.get(REF_USER);
 
 		Assert.assertNotNull(user);
@@ -110,15 +115,16 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_04_update_user_simple_data() throws CustomException {
-
+	public void update_user_simple_data() throws CustomException {
+		
 		UserDTO user = userService.get(REF_USER);
 		Assert.assertNotNull(user);
 		
 		user.setFirstName(NEW_FIRST_NAME);
 		String userReferenceResult = userService.update(user);
 
-		assertThat(userReferenceResult).isEqualTo(REF_USER);
+		//assertThat(userReferenceResult).isEqualTo(REF_USER);
+		Assert.assertEquals(userReferenceResult, REF_USER);
 	}
 
 	/**
@@ -126,8 +132,8 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_05_update_user_with_new_account() throws CustomException {
-
+	public void update_user_with_new_account() throws CustomException {
+		
 		UserDTO user = userService.get(REF_USER);
 		// create a new account
 		AccountDTO account = new AccountDTO();
@@ -153,11 +159,14 @@ public class AppTest {
 		// CALL the GET serive again
 		user = userService.get(REF_USER);
 		// assert that the firstName is updated
-		assertThat(user.getFirstName()).isEqualTo(NEW_FIRST_NAME);
+		Assert.assertEquals(user.getFirstName(), NEW_FIRST_NAME);
+		
 		// assert that the user have 3 account now
-		assertThat(user.getAccounts().size()).isEqualTo(3);
+		Assert.assertEquals(user.getAccounts().size(), 3);
+		
 		// assert that the totalAmount is updated
-		assertThat(user.getTotalAmount()).isEqualTo(INIT_TRANSACTION_AMOUNT * 3);
+		Double totalAmount = INIT_TRANSACTION_AMOUNT * 3;
+		Assert.assertEquals(user.getTotalAmount(), totalAmount);
 	}
 
 	/**
@@ -165,8 +174,8 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_06_delete_user() throws CustomException {
-
+	public void delete_user() throws CustomException {
+		
 		UserDTO user = userService.get(REF_USER_TO_DELETE);
 
 		// make sure that this user exist
@@ -175,8 +184,7 @@ public class AppTest {
 		String deleteResult = userService.delete(REF_USER_TO_DELETE);
 
 		// test the success delete action
-		assertThat(deleteResult).isEqualTo(IConstant.SUCCESS_ACTION);
-
+		Assert.assertEquals(deleteResult, IConstant.SUCCESS_ACTION);
 	}
 
 	/**
@@ -184,13 +192,13 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_07_get_user_and_throw_exception_when_reference_user_doesnt_exist() throws CustomException {
-
+	public void should_throw_exception_when_get_user_using_reference_not_exist() throws CustomException {
+		
 		// make sure that the user is doesn't exist, so throw an exception
 		try {
 			userService.get(REF_USER_TO_DELETE);
 		} catch (CustomException e) {
-			assertThat(e.getMessage()).isEqualTo(IExceptionMessage.USER_NOT_EXIST);
+			Assert.assertEquals(e.getMessage(), IExceptionMessage.USER_NOT_EXIST);
 		}
 
 	}
@@ -200,8 +208,8 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_08_create_account() throws CustomException {
-
+	public void create_account() throws CustomException {
+		
 		final AccountDTO accountToCreate = new AccountDTO();
 		accountToCreate.setReference(REF_ACCOUNT);
 		accountToCreate.setReferenceUser(REF_USER);
@@ -211,7 +219,8 @@ public class AppTest {
 		// Create account service test
 		String accountReferenceResult = acountService.create(accountToCreate);
 
-		assertThat(REF_ACCOUNT).isEqualTo(accountReferenceResult);
+		Assert.assertEquals(REF_ACCOUNT, accountReferenceResult);
+		
 	}
 
 	/**
@@ -219,11 +228,11 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_09_get_account() throws CustomException {
+	public void get_account() throws CustomException {
 		
 		// Get account service test
-		AccountDTO account = acountService.get(REF_ACCOUNT);
-		assertThat(account).isNotEqualTo(null);
+		AccountDTO account = acountService.get(REF_ACCOUNT_22);
+		Assert.assertNotNull(account);
 	}
 	
 
@@ -232,15 +241,15 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_10_update_account() throws CustomException {
+	public void update_account() throws CustomException {
 		
 		// Get account service test
-		AccountDTO account = acountService.get(REF_ACCOUNT);
+		AccountDTO account = acountService.get(REF_ACCOUNT_22);
 		account.setDescription("Desc");
 		// Update account service test
 		acountService.update(account);
 		// assert that the description is updated
-		assertThat(account.getDescription()).isEqualTo("Desc");
+		Assert.assertEquals(account.getDescription(), "Desc");
 	}
 
 	/**
@@ -248,13 +257,13 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_11_delete_account() throws CustomException {
-
+	public void delete_account() throws CustomException {
+		
 		// Delete account service test
-		String deleteResult = acountService.delete(REF_ACCOUNT);
+		String deleteResult = acountService.delete(REF_ACCOUNT_22);
 
 		// test success delete action
-		assertThat(deleteResult).isEqualTo(IConstant.SUCCESS_ACTION);
+		Assert.assertEquals(deleteResult, IConstant.SUCCESS_ACTION);
 	}
 
 	/**
@@ -262,12 +271,13 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_12_get_account_and_throw_exception() throws CustomException {
+	public void should_throw_exception_when_get_account_using_reference_not_exist() throws CustomException {
+		
 		// Throw an exception when the account NOT exist
 		try {
 			acountService.get(REF_ACCOUNT);
 		} catch (CustomException e) {
-			assertThat(e.getMessage()).isEqualTo(IExceptionMessage.ACCOUNT_NOT_EXIST);
+			Assert.assertEquals(e.getMessage(), IExceptionMessage.ACCOUNT_NOT_EXIST);
 		}
 
 	}
@@ -277,7 +287,7 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_13_create_transaction() throws CustomException {
+	public void create_transaction() throws CustomException {
 
 		Double transactionAmount = 150D;
 		Double totalUserAmountBeforeTransaction = userService.get(REF_USER).getTotalAmount();
@@ -290,11 +300,12 @@ public class AppTest {
 
 		String status = transactionService.doTransaction(transaction);
 		// test the success action
-		assertThat(status).isEqualTo(IConstant.SUCCESS_ACTION);
+		Assert.assertEquals(status, IConstant.SUCCESS_ACTION);
 
 		Double totalUserAmountAfterTransaction = userService.get(REF_USER).getTotalAmount();
 
-		assertThat(totalUserAmountAfterTransaction).isEqualTo(transactionAmount + totalUserAmountBeforeTransaction);
+		Double total =  transactionAmount + totalUserAmountBeforeTransaction;
+		Assert.assertEquals(totalUserAmountAfterTransaction, total);
 	}
 	
 	/**
@@ -302,8 +313,8 @@ public class AppTest {
 	 * @throws CustomException
 	 */
 	@Test
-	public void test_14_create_transaction_and_throw_exception() throws CustomException {
-
+	public void should_throw_exception_when_create_transaction_for_account_not_exist() throws CustomException {
+		
 		Double transactionAmount = 150D;
 
 		final TransactionDTO transaction = new TransactionDTO();
@@ -318,7 +329,7 @@ public class AppTest {
 		try {
 			transactionService.doTransaction(transaction);
 		} catch (CustomException e) {
-			assertThat(e.getMessage()).isEqualTo(IExceptionMessage.ACCOUNT_NOT_EXIST);
+			Assert.assertEquals(e.getMessage(), IExceptionMessage.ACCOUNT_NOT_EXIST);
 		}
 	}
 }
